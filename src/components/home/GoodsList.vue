@@ -4,19 +4,22 @@
         <div>您当前的位置：</div>
         <el-breadcrumb size="small" separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item v-for="item in cidList" :key="item" to="/goodslist?cid=">{{getCName(item)}}</el-breadcrumb-item>
+          <el-breadcrumb-item v-for="item in cidList" :key="item" :to="'/goodslist?cid='+item">{{getCName(item)}}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{getCName(this.lastbdc)}}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="main">
         <div class="side">
           <div class="category">
             <div class="category-inner">
-              <div class="title">{{categoryList.name}}</div>
+              <div class="title">{{cidList.length >= 2 ? getCName(this.lastbdc) : categoryList.name}}</div>
               <div class="subtitle" v-for="item in categoryList.children" :key="item.id">
-                <div class="t">{{item.name}}</div>
+                <div class="t">
+                  <router-link :to="'/goodslist?cid='+handleLastbdc()+'-'+item.id">{{item.name}}</router-link>
+                </div>
                 <div class="inner" v-if="item.children!=undefined">
                   <div  v-for="ctg in item.children" :key="ctg.id">
-                    {{ctg.name}}
+                    <router-link :to="'/goodslist?cid='+lastbdc+'-'+item.id+'-'+ctg.id">{{ctg.name}}</router-link>
                   </div>
                 </div>
               </div>
@@ -92,53 +95,72 @@ export default {
       categoryName: {},
       categoryList: {},
       conditionList: ['不限', '<1000', '1000-3000', '3000-8000', '>8000'],
-      cdtIndex: 0
+      cdtIndex: 0,
+      lastbdc: ''
     }
   },
   created: function () {
-    let cid = this.$route.query.cid
-    let arr = cid.split('-')
-    let temp = ''
-    let temparr = []
-    for (let item of arr) {
-      temp += item
-      temparr.push(temp)
-      temp += '-'
-    }
-    let list = this.commonMemory.category
-    if (arr.length === 1) {
-      for (let ctg of list) {
-        if (arr[0] * 1 === ctg.id) {
-          this.categoryList = ctg
-          break
-        }
-      }
-    } else {
-      let tempobj = {}
-      for (let ctg of list) {
-        if (arr[0] * 1 === ctg.id) {
-          tempobj = ctg
-          break
-        }
-      }
-      for (let ctg1 of tempobj.children) {
-        if (arr[1] * 1 === ctg1.id) {
-          this.categoryList = ctg1
-          break
-        }
-      }
-    }
-    this.categoryid = arr[arr.length - 1]
-    this.cidList = temparr
-    this.categoryName = this.commonMemory.categoryName
+    this.init()
   },
   methods: {
     getCName (str) {
+      console.log(str)
       let arr = str.split('-')
       return this.categoryName[arr[arr.length - 1]]
     },
     changeCdt (index) {
       this.cdtIndex = index
+    },
+    handleLastbdc () {
+      let arr = this.lastbdc.split('-')
+      if (arr.length >= 3) {
+        return arr[0] + '-' + arr[1]
+      } else {
+        return this.lastbdc
+      }
+    },
+    init () {
+      let cid = this.$route.query.cid
+      let arr = cid.split('-')
+      let temp = ''
+      let temparr = []
+      for (let item of arr) {
+        temp += item
+        temparr.push(temp)
+        temp += '-'
+      }
+      let list = this.commonMemory.category
+      if (arr.length === 1) {
+        for (let ctg of list) {
+          if (arr[0] * 1 === ctg.id) {
+            this.categoryList = ctg
+            break
+          }
+        }
+      } else {
+        let tempobj = {}
+        for (let ctg of list) {
+          if (arr[0] * 1 === ctg.id) {
+            tempobj = ctg
+            break
+          }
+        }
+        for (let ctg1 of tempobj.children) {
+          if (arr[1] * 1 === ctg1.id) {
+            this.categoryList = ctg1
+            break
+          }
+        }
+      }
+      this.categoryid = arr[arr.length - 1]
+      this.lastbdc = temparr.pop()
+      this.cidList = temparr
+      this.categoryName = this.commonMemory.categoryName
+    }
+  },
+  watch: {
+    '$route': function () {
+      this.init()
     }
   }
 }
