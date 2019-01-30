@@ -96,11 +96,13 @@ export default {
       categoryList: {},
       conditionList: ['不限', '<1000', '1000-3000', '3000-8000', '>8000'],
       cdtIndex: 0,
-      lastbdc: ''
+      lastbdc: '',
+      goodsList: []
     }
   },
   created: function () {
     this.init()
+    this.queryGoodsList(this.lastbdc)
   },
   methods: {
     getCName (str) {
@@ -156,6 +158,16 @@ export default {
       this.lastbdc = temparr.pop()
       this.cidList = temparr
       this.categoryName = this.commonMemory.categoryName
+    },
+    queryGoodsList (cid) {
+      this.$http.get('/getGoodsByCategoryId', {
+        params: {cid: cid}
+      }).then(result => {
+        if (result.resultCode === result.SUCCESS) {
+          this.goodsList = result.data
+          console.log(result.data)
+        }
+      })
     }
   },
   watch: {
