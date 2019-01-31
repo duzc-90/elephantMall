@@ -588,6 +588,47 @@ img {
           margin-right: 10px;
         }
       }
+      .goods-list{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        >div {
+          margin-left: 10px;
+          margin-top: 10px;
+        }
+      }
+      .pager {
+        margin-top: 20px;
+      }
     }
+  }
+}
+.app-goods-info {
+  width: 250px;
+  font-size: 14px;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  .goods-img {
+    img {
+      width: 220px;
+    }
+  }
+  .goods-name {
+    max-width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    a {
+      color: inherit;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .goods-price-sale {
+    color: darkred;
   }
 }

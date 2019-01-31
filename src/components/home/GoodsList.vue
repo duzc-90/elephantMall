@@ -44,7 +44,7 @@
           <div class="condition">
             <div class="p">
               <div>价格：</div>
-              <div v-for="(item,i) in conditionList" :key="i" :class="{'active': cdtIndex == i}" @click="changeCdt(i)">{{item}}</div>
+              <div v-for="item in conditionList" :key="item.id" :class="{'active': cdtIndex == item.id}" @click="changeCdt(item.id)">{{item.name}}</div>
             </div>
             <div class="in">
               <el-input size="mini" class="w"></el-input><span> -</span>
@@ -55,14 +55,28 @@
           <div class="sort">
             <div>排序：</div>
             <div>
-              <el-button type="primary" size="small">销量 <i class="el-icon-sort"></i></el-button>
+              <el-button type="primary" size="small" @click="handleSort('saleqty')">销量 <i :class="{'el-icon-sort':qtyFlag == 1,'el-icon-sort-down':qtyFlag == 0,'el-icon-sort-up':qtyFlag == 2}"></i></el-button>
             </div>
             <div>
-              <el-button type="primary" size="small">评分 <i class="el-icon-sort-down"></i></el-button>
+              <el-button type="primary" size="small" @click="handleSort('score')">评分 <i :class="{'el-icon-sort':scoreFlag == 1,'el-icon-sort-down':scoreFlag == 0,'el-icon-sort-up':scoreFlag == 2}"></i></el-button>
             </div>
             <div>
-              <el-button type="primary" size="small">价格 <i class="el-icon-sort-up"></i></el-button>
+              <el-button type="primary" size="small" @click="handleSort('price')">价格 <i :class="{'el-icon-sort':priceFlag == 1,'el-icon-sort-down':priceFlag == 0,'el-icon-sort-up':priceFlag == 2}"></i></el-button>
             </div>
+          </div>
+          <div class="goods-list">
+            <div v-for="item in goodsList" :key="item.id">
+              <goods-info :goods="item"></goods-info>
+            </div>
+          </div>
+          <div class="pager">
+            <el-pagination
+              background
+              :page-size="pageSize"
+              :current-page="pageNo"
+              layout="prev, pager, next"
+              :total="total">
+            </el-pagination>
           </div>
         </div>
       </div>
@@ -70,8 +84,12 @@
 </template>
 
 <script>
+import GoodsInfo from '../common/GoodsInfo'
 export default {
   name: 'goods-list',
+  components: {
+    GoodsInfo
+  },
   data () {
     return {
       rcmdList: [
@@ -94,10 +112,41 @@ export default {
       cidList: [],
       categoryName: {},
       categoryList: {},
-      conditionList: ['不限', '<1000', '1000-3000', '3000-8000', '>8000'],
+      conditionList: [
+        {
+          id: '1',
+          name: '不限'
+        }, {
+          id: '2',
+          name: '<1000'
+        }, {
+          id: '3',
+          name: '1000-3000'
+        }, {
+          id: '4',
+          name: '3000-8000'
+        }, {
+          id: '5',
+          name: '>8000'
+        }
+      ],
+      conditionMap: {
+        '1': '不限',
+        '2': '<1000',
+        '3': '1000-3000',
+        '4': '3000-8000',
+        '5': '>8000'
+      },
       cdtIndex: 0,
       lastbdc: '',
-      goodsList: []
+      goodsList: [],
+      pageNo: 1,
+      pageSize: 9,
+      total: 9,
+      qtyFlag: 1,
+      priceFlag: 1,
+      scoreFlag: 1,
+      sortCol: ''
     }
   },
   created: function () {
@@ -106,7 +155,6 @@ export default {
   },
   methods: {
     getCName (str) {
-      console.log(str)
       let arr = str.split('-')
       return this.categoryName[arr[arr.length - 1]]
     },
@@ -160,14 +208,47 @@ export default {
       this.categoryName = this.commonMemory.categoryName
     },
     queryGoodsList (cid) {
-      this.$http.get('/getGoodsByCategoryId', {
-        params: {cid: cid}
+      let myflag = 1
+      if (this.sortCol === 'price') {
+        myflag = this.priceFlag
+      } else if (this.sortCol === 'score') {
+        myflag = this.scoreFlag
+      } else if (this.sortCol === 'saleqty') {
+        myflag = this.qtyFlag
+      }
+      this.$http.get('/getGoodsWithCondition', {
+        params: {cid: cid, orderby: this.sortCol, orderbyflag: myflag}
       }).then(result => {
         if (result.resultCode === result.SUCCESS) {
           this.goodsList = result.data
-          console.log(result.data)
+          // this.total = this.goodsList.length
         }
       })
+    },
+    handleSort (type) {
+      this.sortCol = type
+      if (type === 'price') {
+        this.scoreFlag = 1
+        this.qtyFlag = 1
+        this.priceFlag++
+        if (this.priceFlag >= 3) {
+          this.priceFlag = 0
+        }
+      } else if (type === 'score') {
+        this.priceFlag = 1
+        this.qtyFlag = 1
+        this.scoreFlag++
+        if (this.scoreFlag >= 3) {
+          this.scoreFlag = 0
+        }
+      } else if (type === 'saleqty') {
+        this.priceFlag = 1
+        this.scoreFlag = 1
+        this.qtyFlag++
+        if (this.qtyFlag >= 3) {
+          this.qtyFlag = 0
+        }
+      }
     }
   },
   watch: {
