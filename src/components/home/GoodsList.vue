@@ -47,8 +47,8 @@
               <div v-for="item in conditionList" :key="item.id" :class="{'active': cdtIndex == item.id}" @click="changeCdt(item.id)">{{item.name}}</div>
             </div>
             <div class="in">
-              <el-input size="mini" class="w"></el-input><span> -</span>
-              <el-input size="mini" class="w"></el-input>
+              <el-input size="mini" class="w" v-model="minprice"></el-input><span> -</span>
+              <el-input size="mini" class="w" v-model="maxprice"></el-input>
               <el-button size="mini" type="primary">确定</el-button>
             </div>
           </div>
@@ -146,7 +146,9 @@ export default {
       qtyFlag: 1,
       priceFlag: 1,
       scoreFlag: 1,
-      sortCol: ''
+      sortCol: '',
+      minprice: '',
+      maxprice: ''
     }
   },
   created: function () {
@@ -217,7 +219,8 @@ export default {
         myflag = this.qtyFlag
       }
       this.$http.get('/getGoodsWithCondition', {
-        params: {cid: cid, orderby: this.sortCol, orderbyflag: myflag}
+        params: {cid: cid, orderby: this.sortCol, orderbyflag: myflag,
+                 minprice: this.minprice, maxprice: this.maxprice}
       }).then(result => {
         if (result.resultCode === result.SUCCESS) {
           this.goodsList = result.data
