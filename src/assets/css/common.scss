@@ -630,5 +630,12 @@ img {
   }
   .goods-price-sale {
     color: darkred;
+    font-weight: bold;
+  }
+  .btns {
+    margin-top: 10px;
+    img {
+      margin-right: 3px;
+    }
   }
 }

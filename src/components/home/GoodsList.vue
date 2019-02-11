@@ -44,7 +44,7 @@
           <div class="condition">
             <div class="p">
               <div>价格：</div>
-              <div v-for="item in conditionList" :key="item.id" :class="{'active': cdtIndex == item.id}" @click="changeCdt(item.id)">{{item.name}}</div>
+              <div v-for="item in conditionList" :key="item.id" :class="{'active': cdtIndex == item.id}" @click="changeCdt(item)">{{item.name}}</div>
             </div>
             <div class="in">
               <el-input size="mini" class="w" v-model="minprice"></el-input><span> -</span>
@@ -115,29 +115,32 @@ export default {
       conditionList: [
         {
           id: '1',
-          name: '不限'
+          name: '不限',
+          min: '',
+          max: ''
         }, {
           id: '2',
-          name: '<1000'
+          name: '1-1000',
+          min: 1,
+          max: 1000
         }, {
           id: '3',
-          name: '1000-3000'
+          name: '1000-3000',
+          min: 1000,
+          max: 3000
         }, {
           id: '4',
-          name: '3000-8000'
+          name: '3000-8000',
+          min: 3000,
+          max: 8000
         }, {
           id: '5',
-          name: '>8000'
+          name: '8000-15000',
+          min: 8000,
+          max: 15000
         }
       ],
-      conditionMap: {
-        '1': '不限',
-        '2': '<1000',
-        '3': '1000-3000',
-        '4': '3000-8000',
-        '5': '>8000'
-      },
-      cdtIndex: 0,
+      cdtIndex: '1',
       lastbdc: '',
       goodsList: [],
       pageNo: 1,
@@ -160,8 +163,10 @@ export default {
       let arr = str.split('-')
       return this.categoryName[arr[arr.length - 1]]
     },
-    changeCdt (index) {
-      this.cdtIndex = index
+    changeCdt (item) {
+      this.cdtIndex = item.id
+      this.minprice = item.min
+      this.maxprice = item.max
     },
     handleLastbdc () {
       let arr = this.lastbdc.split('-')
@@ -219,10 +224,16 @@ export default {
         myflag = this.qtyFlag
       }
       this.$http.get('/getGoodsWithCondition', {
-        params: {cid: cid, orderby: this.sortCol, orderbyflag: myflag,
-                 minprice: this.minprice, maxprice: this.maxprice}
+        params: {
+          cid: cid,
+          orderby: this.sortCol,
+          orderbyflag: myflag,
+          minprice: this.minprice,
+          maxprice: this.maxprice
+        }
       }).then(result => {
         if (result.resultCode === result.SUCCESS) {
+          console.log(result.data)
           this.goodsList = result.data
           // this.total = this.goodsList.length
         }
