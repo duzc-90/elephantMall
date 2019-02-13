@@ -4,7 +4,7 @@
       <div class="main">
         <div class="carousel">
           <el-carousel>
-            <el-carousel-item v-if="bannerList.length>0" v-for="item in bannerList" :key="item.seq" :label="item.title">
+            <el-carousel-item v-if="bannerList.length>0" v-for="item in bannerList" :key="'key0-'+item.seq" :label="item.title">
               <img :src="item.src" alt="">
             </el-carousel-item>
           </el-carousel>
@@ -37,14 +37,14 @@
             <div class="th">商品分类</div>
             <a class="link" href="javascript:;">全部商品分类</a>
           </div>
-          <div class="category-info" v-for="item in categoryList" :key="item.id">
+          <div class="category-info" v-for="item in categoryList" :key="'key1-'+item.id">
             <div class="l th">
               <router-link :to="'/goodslist?cid='+item.id">
                 <span>{{item.name}}</span>
               </router-link>
             </div>
             <div class="r">
-              <div v-for="c in item.children" :key="c.id">
+              <div v-for="c in item.children" :key="'key2-'+c.id">
                 <router-link :to="'/goodslist?cid='+item.id+'-'+c.id">
                 {{c.name}}
                 </router-link>
@@ -55,14 +55,14 @@
         <div class="goods-new">
           <div class="title th">最新商品<span class="desc">New Product</span></div>
           <div class="main">
-            <goods v-for="item in goods_new" :goods="item" :key="item.id"></goods>
+            <goods v-for="item in goods_new" :goods="item" :key="'key3-'+item.id"></goods>
           </div>
         </div>
-        <div class="goods-category" v-for="item in categoryList" :key="item.id">
+        <div class="goods-category" v-for="item in categoryList" :key="'key4-'+item.id">
           <div class="title">
             <div class="l">{{item.name}}</div>
             <div class="r">
-              <div class="ctg" v-for="c in item.children" :key="c.id">
+              <div class="ctg" v-for="c in item.children" :key="'key5-'+c.id">
                 <router-link to="/">
                 {{c.name}}
                 </router-link>
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="goods-info">
-            <goods v-for="gl in goodsMap[item.id]" :goods="gl" :key="gl.id"></goods>
+            <goods v-for="gl in goodsMap[item.id]" :goods="gl" :key="'key6-'+item.id+'-'+gl.id"></goods>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@
             <div></div>
           </div>
           <div class="goods-hot">
-            <div class="hot-inner" v-for="item in goods_new" :key="item.id">
+            <div class="hot-inner" v-for="item in goods_new" :key="'key7-'+item.id">
               <div class="img">
                 <router-link to="/">
                   <img :src="item.imgurl" alt="">
@@ -114,7 +114,7 @@
                 {{item.name}}
                 </router-link>
               </div>
-              <div class="p">¥{{item.saleprice}}</div>
+              <div class="p">¥{{item.saleprice.toFixed(2)}}</div>
             </div>
           </div>
         </div>

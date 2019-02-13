@@ -72,8 +72,8 @@ export default {
     })
   },
   methods: {
-    handleChange (value) {
-      console.log(value)
+    handleChange (val) {
+      this.$router.push('/goodslist?cid=' + val.join('-'))
     },
     home () {
       this.$router.push('/')
