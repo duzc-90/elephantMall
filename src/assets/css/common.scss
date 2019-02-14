@@ -661,8 +661,8 @@ img {
         height: 480px;
         position: relative;
         .inner{
-          width: 500px;
-          padding: 10px 20px;
+          width: 480px;
+          padding: 10px;
           height: 480px;
           box-sizing: border-box;
           >img{
@@ -672,23 +672,43 @@ img {
           }
         }
         .marker {
-          width: 500px;
+          width: 480px;
           height: 480px;
           position: absolute;
-          top: 0;
+          top: 10px;
+          left: 10px;
           z-index: 100;
-          .mirror{
-            height: 150px;
-            width: 150px;
-            border: 1px solid #9e9e9e;
-            background-color: rgba(0,0,0,0.1);
-            position: absolute;
-            z-index: 50;
-            top: 0;
-            display: none;
-          }
-          &:hover .mirror{
+          cursor: pointer;
+          &:hover ~.mirror{
             display: block;
+          }
+          &:hover ~.bigimg{
+            display: block;
+          }
+        }
+        .mirror{
+          height: 150px;
+          width: 150px;
+          border: 1px solid #9e9e9e;
+          background-color: rgba(0,0,0,0.1);
+          position: absolute;
+          z-index: 50;
+          top: 0;
+          display: none;
+        }
+        .bigimg{
+          position: absolute;
+          top: 10px;
+          left: 500px;
+          height: 350px;
+          width: 300px;
+          display: none;
+          overflow: hidden;
+          border: 1px solid #9e9e9e;
+          img {
+            width: 828px;
+            height: 828px;
+            vertical-align: top;
           }
         }
       }
@@ -725,6 +745,38 @@ img {
         padding: 5px 0;
         text-align: left;
         font-weight: 400;
+      }
+      .detailinfo {
+        padding: 10px;
+        p {
+          font-size: 14px;
+          text-align: left;
+          .p {
+            font-size: 20px;
+            color: #a40000;
+          }
+        }
+        .score {
+          font-size: 14px;
+          display: flex;
+        }
+      }
+      .current {
+        padding: 10px 20px;
+        border: 1px solid #fdb888;
+        background: #ffffe5;
+        text-align: left;
+        .qty {
+          margin-bottom: 10px;
+          font-size: 14px;
+        }
+        img {
+          border-radius: 5px;
+          overflow: hidden;
+          & +img {
+            margin-left: 20px;
+          }
+        }
       }
     }
   }
