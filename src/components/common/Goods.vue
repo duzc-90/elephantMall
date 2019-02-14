@@ -1,7 +1,7 @@
 <template>
     <div class="app-goods">
       <div class="goods-img">
-        <router-link to="/">
+        <router-link :to="'/goodsdetail/'+goods.id">
           <img :src="goods.imgurl" alt="">
         </router-link>
       </div>

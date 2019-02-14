@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/home/Home'
 import Index from '@/components/home/Index'
 import GoodsList from '@/components/home/GoodsList'
+import GoodsDetail from '@/components/home/GoodsDetail'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
           path: '/goodslist',
           name: 'goodslist',
           component: GoodsList
+        },
+        {
+          path: '/goodsdetail/:gid',
+          name: 'goodsdetail',
+          component: GoodsDetail
         }
       ]
     }
