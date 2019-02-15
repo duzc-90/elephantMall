@@ -1,12 +1,12 @@
 <template>
     <div class="app-goods-info">
       <div class="goods-img">
-        <router-link to="/">
+        <router-link :to="'/goodsdetail/'+goods.id">
           <img :src="goods.imgurl" alt="">
         </router-link>
       </div>
       <div class="goods-name">
-        <router-link to="/">
+        <router-link :to="'/goodsdetail/'+goods.id">
         {{goods.name}}
         </router-link>
       </div>

@@ -6,7 +6,7 @@
         </router-link>
       </div>
       <div class="goods-name">
-        <router-link to="/">
+        <router-link :to="'/goodsdetail/'+goods.id">
         {{goods.name}}
         </router-link>
       </div>

@@ -105,12 +105,12 @@
           <div class="goods-hot">
             <div class="hot-inner" v-for="item in goods_new" :key="'key7-'+item.id">
               <div class="img">
-                <router-link to="/">
+                <router-link :to="'/goodsdetail/'+item.id">
                   <img :src="item.imgurl" alt="">
                 </router-link>
               </div>
               <div>
-                <router-link to="/">
+                <router-link :to="'/goodsdetail/'+item.id">
                 {{item.name}}
                 </router-link>
               </div>
